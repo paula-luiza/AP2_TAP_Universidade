@@ -1,106 +1,120 @@
 package br.edu.ibmec.resource;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-@RequestMapping("aluno")
-@Consumes("application/xml")
-@Produces("application/xml")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import br.edu.ibmec.service.AlunoService;
+import br.edu.ibmec.dto.AlunoDTO;
+import br.edu.ibmec.entity.Aluno;
+import br.edu.ibmec.exception.DaoException;
+import br.edu.ibmec.exception.ServiceException;
+import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
+
+@RestController
+@RequestMapping("/aluno")
 public class AlunoResource {
 
-	private AlunoService alunoService;
+    private AlunoService alunoService;
 
-	public AlunoResource() {
-		this.alunoService = new AlunoService();
-	}
+    public AlunoResource() {
+        this.alunoService = new AlunoService();
+    }
 
-    @GetMapping
-	// @Produces(MediaType.APPLICATION_JSON + ", " + MediaType.TEXT_PLAIN)
-	// @Produces({"application/json", "text/plain"})
-	// @Produces("application/json")
-	@Produces( { "application/xml", "application/json"})
-	@RequestMapping("{matricula}")
-	public Response buscarAluno(@PathParam("matricula") String matricula) {
-		try {
-			AlunoDTO alunoDTO = alunoService.buscarAluno(new Integer(matricula)
-					.intValue());
-			Response resposta = Response.ok(alunoDTO).build();
-			return resposta;
-		} catch (DaoException e) {
-			return Response.status(404).build();
-		}
-	}
+    @GetMapping(value = "/{matricula}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<AlunoDTO> buscarAluno(@PathVariable String matricula) {
+        try {
+            AlunoDTO alunoDTO = alunoService.buscarAluno(Integer.parseInt(matricula));
+            return ResponseEntity.ok(alunoDTO);
+        } catch (DaoException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-	@PostMapping
-	public Response cadastrarAluno(AlunoDTO alunoDTO) throws ServiceException,
-			DaoException {
-		try {
-			alunoService.cadastrarAluno(alunoDTO);
-			return Response.created(new URI("" + alunoDTO.getMatricula())).build();
-		} catch (ServiceException e) {
-			if (e.getTipo() == ServiceExceptionEnum.CURSO_CODIGO_INVALIDO)
-				return Response.status(400).header("Motivo", "C�digo inv�lido")
-						.build();
-			if (e.getTipo() == ServiceExceptionEnum.CURSO_NOME_INVALIDO)
-				return Response.status(400).header("Motivo", "Nome inv�lido")
-						.build();
-			else
-				return Response.status(400).header("Motivo", e.getMessage())
-						.build();
-		} catch (DaoException e) {
-			return Response.status(400).header("Motivo",
-					"Erro no banco de dados").build();
-		} catch (URISyntaxException e) {
-			throw new RuntimeException();
-		}
-	}
+    @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> cadastrarAluno(@RequestBody AlunoDTO alunoDTO)
+            throws ServiceException, DaoException {
+        try {
+            alunoService.cadastrarAluno(alunoDTO);
+            URI location = URI.create("" + alunoDTO.getMatricula());
+            return ResponseEntity.created(location).build();
+        } catch (ServiceException e) {
+            if (e.getTipo() == ServiceExceptionEnum.CURSO_CODIGO_INVALIDO) {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", "Código inválido")
+                        .build();
+            }
+            if (e.getTipo() == ServiceExceptionEnum.CURSO_NOME_INVALIDO) {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", "Nome inválido")
+                        .build();
+            } else {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", e.getMessage())
+                        .build();
+            }
+        } catch (DaoException e) {
+            return ResponseEntity.badRequest()
+                    .header("Motivo", "Erro no banco de dados")
+                    .build();
+        }
+    }
 
-	@PutMapping
-	public Response alterarAluno(AlunoDTO alunoDTO) {
-		try {
-			alunoService.alterarAluno(alunoDTO);
-			return Response.created(new URI("" + alunoDTO.getMatricula())).build();
-		} catch (ServiceException e) {
-			if (e.getTipo() == ServiceExceptionEnum.CURSO_CODIGO_INVALIDO)
-				return Response.status(400).header("Motivo", "C�digo inv�lido")
-						.build();
-			if (e.getTipo() == ServiceExceptionEnum.CURSO_NOME_INVALIDO)
-				return Response.status(400).header("Motivo", "Nome inv�lido")
-						.build();
-			else
-				return Response.status(400).header("Motivo", e.getMessage())
-						.build();
-		} catch (DaoException e) {
-			return Response.status(400).header("Motivo",
-					"Erro no banco de dados").build();
-		} catch (URISyntaxException e) {
-			throw new RuntimeException();
-		}
-	}
+    @PutMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> alterarAluno(@RequestBody AlunoDTO alunoDTO)
+            throws ServiceException, DaoException {
+        try {
+            alunoService.alterarAluno(alunoDTO);
+            URI location = URI.create("" + alunoDTO.getMatricula());
+            return ResponseEntity.created(location).build();
+        } catch (ServiceException e) {
+            if (e.getTipo() == ServiceExceptionEnum.CURSO_CODIGO_INVALIDO) {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", "Código inválido")
+                        .build();
+            }
+            if (e.getTipo() == ServiceExceptionEnum.CURSO_NOME_INVALIDO) {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", "Nome inválido")
+                        .build();
+            } else {
+                return ResponseEntity.badRequest()
+                        .header("Motivo", e.getMessage())
+                        .build();
+            }
+        } catch (DaoException e) {
+            return ResponseEntity.badRequest()
+                    .header("Motivo", "Erro no banco de dados")
+                    .build();
+        }
+    }
 
-	@DELETE
-	@Path("{matricula}")
-	public Response removerAluno(@PathParam("matricula") String matricula) {
-		try {
-			alunoService.removerAluno(new Integer(matricula)
-					.intValue());
-			Response resposta = Response.ok().build();
-			return resposta;
-		} catch (DaoException e) {
-			return Response.status(404).build();
-		}
-	}
+    @DeleteMapping("/{matricula}")
+    public ResponseEntity<Void> removerAluno(@PathVariable String matricula) {
+        try {
+            alunoService.removerAluno(Integer.parseInt(matricula));
+            return ResponseEntity.ok().build();
+            // or: return ResponseEntity.noContent().build(); // 204 No Content (more common for DELETE)
+        } catch (DaoException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-	@GET
-	@Produces("text/plain")
-	public String listarAlunos() {
-		List<String> nomes = new ArrayList<String>();
-		for(Iterator<Aluno> it = alunoService.listarAlunos().iterator(); it.hasNext();)
-		{
-			Aluno aluno = (Aluno)it.next();
-			nomes.add(aluno.getNome());
-		} return nomes.toString();
-	}
+    @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> listarAlunos() {
+        List<String> nomes = new ArrayList<>();
+        for (Aluno aluno : alunoService.listarAlunos()) {
+            nomes.add(aluno.getNome());
+        }
+        return ResponseEntity.ok(nomes.toString());
+    }
 }
