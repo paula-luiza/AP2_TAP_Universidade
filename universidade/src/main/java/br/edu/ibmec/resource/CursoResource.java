@@ -21,9 +21,8 @@ import br.edu.ibmec.exception.DaoException;
 import br.edu.ibmec.exception.ServiceException;
 import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
 
-@Path("curso")
-@Consumes("application/xml")
-@Produces("application/xml")
+@RestController
+@RequestMapping("/aluno")
 public class CursoResource {
 
 	private CursoService cursoService;
