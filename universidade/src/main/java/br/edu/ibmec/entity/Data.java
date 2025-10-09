@@ -1,6 +1,8 @@
 package br.edu.ibmec.entity;
 
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class Data {
 	private int dia;
 	private int mes;

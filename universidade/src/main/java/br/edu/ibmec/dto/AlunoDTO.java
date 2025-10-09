@@ -10,6 +10,7 @@ package br.edu.ibmec.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -22,7 +23,7 @@ public class AlunoDTO {
 	private int idade;
 	private boolean matriculaAtiva;
 	private EstadoCivilDTO estadoCivilDTO;
-	private Vector<String> telefones;
+	private List<String> telefones;
 
 	private int curso;
 	
@@ -37,8 +38,8 @@ public class AlunoDTO {
 			String dtNascimento,
 			boolean matriculaAtiva, 
 			EstadoCivilDTO estadoCivilDTO, 
-			int curso, 
-			Vector<String> telefones) {
+			int curso,
+			List<String> telefones) {
 		this.matricula = matricula;
 		this.nome = nome;
 		this.dtNascimento = dtNascimento;
@@ -121,11 +122,11 @@ public class AlunoDTO {
 		this.dtNascimento = dtNascimento;
 	}
 
-	public Vector<String> getTelefones() {
+	public List<String> getTelefones() {
 		return telefones;
 	}
 
-	public void setTelefones(Vector<String> telefones) {
+	public void setTelefones(List<String> telefones) {
 		this.telefones = telefones;
 	}
 

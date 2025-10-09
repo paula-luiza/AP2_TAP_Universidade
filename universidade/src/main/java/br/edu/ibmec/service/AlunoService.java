@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
-import br.edu.ibmec.dao.EscolaDAO;
+import br.edu.ibmec.dao.AlunoRepository;
+import br.edu.ibmec.dao.CursoRepository;
 import br.edu.ibmec.dto.AlunoDTO;
 import br.edu.ibmec.entity.Aluno;
 import br.edu.ibmec.entity.Curso;
@@ -13,105 +14,136 @@ import br.edu.ibmec.entity.EstadoCivil;
 import br.edu.ibmec.exception.DaoException;
 import br.edu.ibmec.exception.ServiceException;
 import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlunoService {
-	private EscolaDAO dao;
 
-	public AlunoService() {
-		this.dao = EscolaDAO.getInstance();
-	}
-	
-	public static final Data getData(String data)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date dataConvertida = null;
-		try {
-			dataConvertida = sdf.parse(data);
-			Data dataRetorno = new Data();
-			dataRetorno.setAno(dataConvertida.getYear());
-			dataRetorno.setMes(dataConvertida.getMonth());
-			dataRetorno.setDia(dataConvertida.getDay());
-			return dataRetorno;
-		} catch (Exception e) {
-			System.out.println("Erro Convers�o da data: " + e.getMessage());
-			return null;
-		}
-	}
+    @Autowired
+    private AlunoRepository alunoRepository;
 
-	public AlunoDTO buscarAluno(int matricula) throws DaoException {
-		try {
-			AlunoDTO alunoDTO = new AlunoDTO(dao.getAluno(matricula)
-					.getMatricula(), dao.getAluno(matricula).getNome(), 
-					dao.getAluno(matricula).getDataNascimento().toString(), 
-					dao.getAluno(matricula).isMatriculaAtiva(), 
-					null, 
-					dao.getAluno(matricula).getCurso().getCodigo(),
-					dao.getAluno(matricula).getTelefones());
-			return alunoDTO;
-		} catch (DaoException e) {
-			throw new DaoException("");
-		}
-	}
+    @Autowired
+    private CursoRepository cursoRepository;
 
-	public Collection<Aluno> listarAlunos() {
-		return dao.getAlunos();
-	}
+    public static final Data getData(String data)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataConvertida = null;
+        try {
+            dataConvertida = sdf.parse(data);
+            Data dataRetorno = new Data();
+            dataRetorno.setAno(dataConvertida.getYear());
+            dataRetorno.setMes(dataConvertida.getMonth());
+            dataRetorno.setDia(dataConvertida.getDay());
+            return dataRetorno;
+        } catch (Exception e) {
+            System.out.println("Erro Conversão da data: " + e.getMessage());
+            return null;
+        }
+    }
 
-	public void cadastrarAluno(AlunoDTO alunoDTO) throws ServiceException,
-			DaoException {
-		if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
-			throw new ServiceException(
-					ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-		}
-		if ((alunoDTO.getNome().length() < 1)
-				|| (alunoDTO.getNome().length() > 20)) {
-			throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
-		}
-				
-		Aluno aluno = new Aluno(alunoDTO.getMatricula(), alunoDTO.getNome(),
-				getData(alunoDTO.getDtNascimento().toString()), alunoDTO.isMatriculaAtiva(),
-				EstadoCivil.solteiro, dao.getCurso(alunoDTO.getCurso()),
-				alunoDTO.getTelefones());
+    public AlunoDTO buscarAluno(int matricula) throws DaoException {
+        try {
+            Aluno aluno = alunoRepository.findById(matricula)
+                    .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
-		try {
-			dao.addAluno(aluno);
-			Curso curso = dao.getCurso(alunoDTO.getCurso());
-			curso.getAlunos().add(aluno);
-		} catch (DaoException e) {
-			throw new DaoException("erro do dao no service throw");
-		}
-	}
+            AlunoDTO alunoDTO = new AlunoDTO(
+                    aluno.getMatricula(),
+                    aluno.getNome(),
+                    aluno.getDataNascimento().toString(),
+                    aluno.isMatriculaAtiva(),
+                    null,
+                    aluno.getCurso().getCodigo(),
+                    aluno.getTelefones());
+            return alunoDTO;
+        } catch (Exception e) {
+            throw new DaoException("Erro ao buscar aluno");
+        }
+    }
 
-	public void alterarAluno(AlunoDTO alunoDTO) throws ServiceException,
-			DaoException {
-		if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
-			throw new ServiceException(
-					ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-		}
-		if ((alunoDTO.getNome().length() < 1)
-				|| (alunoDTO.getNome().length() > 20)) {
-			throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
-		}
+    public Collection<Aluno> listarAlunos() {
+        return alunoRepository.findAll();
+    }
 
-		Aluno aluno = new Aluno(alunoDTO.getMatricula(), alunoDTO.getNome(),
-				getData(alunoDTO.getDtNascimento()), alunoDTO.isMatriculaAtiva(),
-				EstadoCivil.solteiro, dao.getCurso(alunoDTO.getCurso()),
-				alunoDTO.getTelefones());
+    @Transactional
+    public void cadastrarAluno(AlunoDTO alunoDTO) throws ServiceException,
+            DaoException {
+        if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
+            throw new ServiceException(
+                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
+        }
+        if ((alunoDTO.getNome().length() < 1)
+                || (alunoDTO.getNome().length() > 20)) {
+            throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
+        }
 
-		try {
-			dao.updateAluno(aluno);
-		} catch (DaoException e) {
-			throw new DaoException("erro do dao no service throw");
-		}
-	}
+        try {
+            Curso curso = cursoRepository.findById(alunoDTO.getCurso())
+                    .orElseThrow(() -> new DaoException("Curso não encontrado"));
 
-	public void removerAluno(int matricula) throws DaoException {
-		try {
-			dao.removeAluno(matricula);
-		} catch (DaoException e) {
-			throw new DaoException("");
-		}
-	}
+            Aluno aluno = new Aluno(
+                    alunoDTO.getMatricula(),
+                    alunoDTO.getNome(),
+                    getData(alunoDTO.getDtNascimento().toString()),
+                    alunoDTO.isMatriculaAtiva(),
+                    EstadoCivil.solteiro,
+                    curso,
+                    alunoDTO.getTelefones());
+
+            alunoRepository.save(aluno);
+            curso.getAlunos().add(aluno);
+            cursoRepository.save(curso);
+        } catch (DaoException e) {
+            throw new DaoException("erro do dao no service throw");
+        }
+    }
+
+    @Transactional
+    public void alterarAluno(AlunoDTO alunoDTO) throws ServiceException,
+            DaoException {
+        if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
+            throw new ServiceException(
+                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
+        }
+        if ((alunoDTO.getNome().length() < 1)
+                || (alunoDTO.getNome().length() > 20)) {
+            throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
+        }
+
+        try {
+            if (!alunoRepository.existsById(alunoDTO.getMatricula())) {
+                throw new DaoException("Aluno não encontrado");
+            }
+
+            Curso curso = cursoRepository.findById(alunoDTO.getCurso())
+                    .orElseThrow(() -> new DaoException("Curso não encontrado"));
+
+            Aluno aluno = new Aluno(
+                    alunoDTO.getMatricula(),
+                    alunoDTO.getNome(),
+                    getData(alunoDTO.getDtNascimento()),
+                    alunoDTO.isMatriculaAtiva(),
+                    EstadoCivil.solteiro,
+                    curso,
+                    alunoDTO.getTelefones());
+
+            alunoRepository.save(aluno);
+        } catch (DaoException e) {
+            throw new DaoException("erro do dao no service throw");
+        }
+    }
+
+    @Transactional
+    public void removerAluno(int matricula) throws DaoException {
+        try {
+            if (!alunoRepository.existsById(matricula)) {
+                throw new DaoException("Aluno não encontrado");
+            }
+            alunoRepository.deleteById(matricula);
+        } catch (Exception e) {
+            throw new DaoException("Erro ao remover aluno");
+        }
+    }
 }
