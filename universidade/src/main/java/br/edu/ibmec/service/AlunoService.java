@@ -3,6 +3,8 @@ package br.edu.ibmec.service;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import br.edu.ibmec.dao.AlunoRepository;
 import br.edu.ibmec.dao.CursoRepository;
@@ -27,19 +29,21 @@ public class AlunoService {
     @Autowired
     private CursoRepository cursoRepository;
 
-    public static final Data getData(String data)
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataConvertida = null;
+    public static final Data getData(String dataString) {
         try {
-            dataConvertida = sdf.parse(data);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            LocalDate localDate = LocalDate.parse(dataString, formatter);
+
             Data dataRetorno = new Data();
-            dataRetorno.setAno(dataConvertida.getYear());
-            dataRetorno.setMes(dataConvertida.getMonth());
-            dataRetorno.setDia(dataConvertida.getDay());
+            dataRetorno.setAno(localDate.getYear());           // Retorna o ano completo (ex: 2001)
+            dataRetorno.setMes(localDate.getMonthValue());     // Retorna o mês correto (ex: 10 para Outubro)
+            dataRetorno.setDia(localDate.getDayOfMonth());     // Retorna o dia do mês (ex: 1)
+
             return dataRetorno;
+
         } catch (Exception e) {
-            System.out.println("Erro Conversão da data: " + e.getMessage());
+            System.out.println("Erro na conversão da data: " + e.getMessage());
             return null;
         }
     }
