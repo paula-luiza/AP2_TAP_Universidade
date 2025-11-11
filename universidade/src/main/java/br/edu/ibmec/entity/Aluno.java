@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -42,6 +43,13 @@ public class Aluno {
     @JoinColumn(name = "curso_codigo")
     private Curso curso;
 
+    @OneToMany(
+            mappedBy = "aluno",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Inscricao> inscricoes = new ArrayList<Inscricao>();
+
     public Aluno(int matricula, String nome, Data dataNascimento,
                  boolean matriculaAtiva, EstadoCivil estadoCivil, Curso curso,
                  List<String> telefones) {
@@ -54,5 +62,13 @@ public class Aluno {
 
         this.idade = 0;
         this.telefones = telefones;
+    }
+
+    public void addInscricao(Inscricao inscricao) {
+        this.inscricoes.add(inscricao);
+    }
+
+    public void removeInscricao(Inscricao inscricao) {
+        this.inscricoes.remove(inscricao);
     }
 }
