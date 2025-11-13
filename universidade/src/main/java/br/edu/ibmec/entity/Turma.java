@@ -37,6 +37,10 @@ public class Turma {
     )
     private List<Inscricao> inscricoes = new ArrayList<Inscricao>();
 
+    @ManyToOne
+    @JoinColumn(name = "cpf_professor");
+    private Professor professor;
+
     public Turma(int id, String codigo, int ano, int semestre, Disciplina disciplina) {
         this.id = id;
         this.codigo = codigo;
