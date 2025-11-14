@@ -70,37 +70,28 @@ public class TurmaService {
         }
 
         try {
-            // 2. Busca as entidades relacionadas (como AlunoService busca o Curso)
             Disciplina disciplina = disciplinaRepository.findById(turmaDTO.getDisciplina())
                     .orElseThrow(() -> new DaoException("Disciplina com ID " + turmaDTO.getDisciplina() + " não encontrada"));
 
             Professor professor = professorRepository.findById(turmaDTO.getProfessor().getCpf())
                     .orElseThrow(() -> new DaoException("Professor com ID " + turmaDTO.getProfessor().getCpf() + " não encontrado"));
 
-            // 3. Cria a nova entidade Turma (Assumindo que Turma tem setters)
             Turma turma = new Turma();
             turma.setCodigo(turmaDTO.getCodigo());
             turma.setAno(turmaDTO.getAno());
             turma.setSemestre(turmaDTO.getSemestre());
             turma.setDisciplina(disciplina);
             turma.setProfessor(professor);
-            // NOTA: A lista de inscrições não é tratada aqui, assim como AlunoService não trata
 
-            // 4. Salva a nova turma
             turmaRepository.save(turma);
 
-            // NOTA: AlunoService salva o outro lado (curso.getAlunos().add(aluno)).
-            // Aqui, a relação é gerenciada pela Inscrição, então não precisamos fazer isso.
-
         } catch (Exception e) {
-            // Repassando a exceção como no AlunoService
             throw new DaoException("erro do dao no service throw: " + e.getMessage());
         }
     }
     
     @Transactional
     public void alterarTurma(TurmaDTO turmaDTO) throws ServiceException, DaoException {
-        // 1. Validação (copiada do cadastrarTurma e AlunoService)
         if (turmaDTO.getCodigo() == null || turmaDTO.getCodigo().trim().isEmpty()) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
@@ -112,20 +103,17 @@ public class TurmaService {
         }
 
         try {
-            // 2. Verifica se a turma existe (necessário para "alterar" ser lógico)
-            // Esta é uma melhoria sobre o AlunoService, que não checa.
             if (!turmaRepository.findByCodigoAndAnoAndSemestre(turmaDTO.getCodigo(), turmaDTO.getAno(), turmaDTO.getSemestre()).isPresent()) {
                 throw new DaoException("Turma não encontrada para alteração");
             }
 
-            // 3. Busca as entidades relacionadas
             Disciplina disciplina = disciplinaRepository.findById(turmaDTO.getDisciplina())
                     .orElseThrow(() -> new DaoException("Disciplina não encontrada"));
 
             Professor professor = professorRepository.findById(turmaDTO.getProfessor().getCpf())
                     .orElseThrow(() -> new DaoException("Professor não encontrado"));
 
-            // 4. Cria o objeto Turma para salvar (padrão "upsert" do AlunoService)
+
             Turma turma = new Turma();
             turma.setCodigo(turmaDTO.getCodigo());
             turma.setAno(turmaDTO.getAno());
@@ -133,7 +121,6 @@ public class TurmaService {
             turma.setDisciplina(disciplina);
             turma.setProfessor(professor);
 
-            // 5. O save() do JPA vai ATUALIZAR a turma existente (pois a chave já existe)
             turmaRepository.save(turma);
 
         } catch (DaoException e) {
@@ -150,7 +137,6 @@ public class TurmaService {
             Turma turma = turmaRepository.findByCodigoAndAnoAndSemestre(codigo, ano, semestre)
                     .orElseThrow(() -> new DaoException("Turma não encontrada para remoção"));
 
-            // 2. Agora podemos deletar a entidade que encontramos
             turmaRepository.delete(turma);
 
         } catch (Exception e) {
