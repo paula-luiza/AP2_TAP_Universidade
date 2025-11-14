@@ -38,15 +38,15 @@ public class Turma {
     private List<Inscricao> inscricoes = new ArrayList<Inscricao>();
 
     @ManyToOne
-    @JoinColumn(name = "cpf_professor");
     private Professor professor;
 
-    public Turma(int id, String codigo, int ano, int semestre, Disciplina disciplina) {
+    public Turma(int id, String codigo, int ano, int semestre, Disciplina disciplina, Professor professor) {
         this.id = id;
         this.codigo = codigo;
         this.ano = ano;
         this.semestre = semestre;
         this.disciplina = disciplina;
+        this.professor = professor;
     }
 
     public void addInscricao(Inscricao inscricao) {

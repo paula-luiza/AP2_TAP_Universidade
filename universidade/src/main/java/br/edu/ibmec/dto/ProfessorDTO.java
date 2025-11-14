@@ -1,7 +1,10 @@
-package br.edu.ibmec.entity;
+package br.edu.ibmec.dto;
 
+import br.edu.ibmec.entity.Data;
+import br.edu.ibmec.entity.EstadoCivil;
+import br.edu.ibmec.entity.Turma;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,29 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
 @Getter
 @Setter
-@Table(name = "professores")
-
-public class Professor {
-
-    @Id
+@XmlRootElement(name = "professor")
+public class ProfessorDTO {
     private String cpf;
-
     private String nome;
-
-    @Embedded
     private Data dataNascimento;
-    
-    @Enumerated(EnumType.STRING)
     private EstadoCivil estadoCivil;
-
-    @OneToMany
     private List<Turma> turmas = new ArrayList<Turma>();
 
-    public Professor(String cpf, String nome, Data dataNascimento, EstadoCivil estadoCivil) {
+    public ProfessorDTO(String cpf, String nome, Data dataNascimento, EstadoCivil estadoCivil) {
         this.cpf = cpf;
         this.nome = nome;
         this.dataNascimento = dataNascimento;

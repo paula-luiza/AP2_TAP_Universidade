@@ -20,7 +20,9 @@ public class Inscricao {
     private float avaliacao2;
     private float media;
     private int numFaltas;
-    private String situacao;
+
+    @Enumerated(EnumType.STRING)
+    private Situacao situacao;
 
     @ManyToOne
     @JoinColumn(name = "aluno_matricula")
@@ -30,10 +32,9 @@ public class Inscricao {
     @JoinColumn(name = "turma_id")
     private Turma turma;
 
-    // private Avaliacao avaliacao;
 
     public Inscricao(float avaliacao1, float avaliacao2, int numFaltas,
-                     String situacao, Aluno aluno, Turma turma) {
+                     Situacao situacao, Aluno aluno, Turma turma) {
         this.avaliacao1 = avaliacao1;
         this.avaliacao2 = avaliacao2;
         this.media = (avaliacao1 + avaliacao2) / 2;

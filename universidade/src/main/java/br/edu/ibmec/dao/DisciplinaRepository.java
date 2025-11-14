@@ -1,12 +1,12 @@
 package br.edu.ibmec.dao;
 
-import br.edu.ibmec.entity.Curso;
+import br.edu.ibmec.entity.Disciplina;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Integer> {
+public interface DisciplinaRepository extends JpaRepository<Disciplina, Integer> {
     boolean existsByCodigo(int codigo);
 
-    Curso findByCodigo(int codigo);
+    Disciplina findByCodigo(int codigo);
 }
