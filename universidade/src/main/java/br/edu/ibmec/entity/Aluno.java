@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,13 @@ public class Aluno {
         this.estadoCivil = estadoCivil;
         this.curso = curso;
 
-        this.idade = 0;
+        if (dataNascimento != null && dataNascimento.getAno() > 0) {
+            LocalDate hoje = LocalDate.now();
+            LocalDate nascimento = LocalDate.of(dataNascimento.getAno(), dataNascimento.getMes(), dataNascimento.getDia());
+            this.idade = Period.between(nascimento, hoje).getYears();
+        } else {
+            this.idade = 0; // Se não houver data, a idade é 0
+        }
         this.telefones = telefones;
     }
 

@@ -48,9 +48,7 @@ public class InscricaoService {
                     inscricao.getNumFaltas(),
                     inscricao.getSituacao(),
                     inscricao.getAluno().getMatricula(),
-                    inscricao.getTurma().getCodigo(),
-                    inscricao.getTurma().getAno(),
-                    inscricao.getTurma().getSemestre()
+                    inscricao.getTurma().getId()
             );
             return inscricaoDTO;
         } catch (Exception e) {
@@ -67,18 +65,15 @@ public class InscricaoService {
     public void cadastrarInscricao(InscricaoDTO inscricaoDTO)
             throws ServiceException, DaoException {
 
-        if ((Integer.parseInt(inscricaoDTO.getCodigo()) < 1) || (Integer.parseInt(inscricaoDTO.getCodigo()) > 999)) {            throw new ServiceException(
+        if ((inscricaoDTO.getIdTurma() < 1) || (inscricaoDTO.getIdTurma() > 999)) {            throw new ServiceException(
                     ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-        }
-        if ((inscricaoDTO.getAno() < 1900) || (inscricaoDTO.getAno() > 2025)) { // Ano atualizado
-            throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
         try {
             Aluno aluno = alunoRepository.findById(inscricaoDTO.getAluno())
                     .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
-            Turma turma = turmaRepository.findByCodigoAndAnoAndSemestre(inscricaoDTO.getCodigo(), inscricaoDTO.getAno(), inscricaoDTO.getSemestre())
+            Turma turma = turmaRepository.findById((long) inscricaoDTO.getIdTurma())
                     .orElseThrow(() -> new DaoException("Turma não encontrada"));
 
             // Cria a nova entidade Inscricao (usando o construtor da sua Entidade)
@@ -102,19 +97,16 @@ public class InscricaoService {
     public void alterarInscricao(InscricaoDTO inscricaoDTO)
             throws ServiceException, DaoException {
 
-        // Validação (mesma do cadastro)
-        if ((Integer.parseInt(inscricaoDTO.getCodigo()) < 1) || (Integer.parseInt(inscricaoDTO.getCodigo()) > 999)) {            throw new ServiceException(
+
+        if ((inscricaoDTO.getIdTurma() < 1) || (inscricaoDTO.getIdTurma() > 999)) {            throw new ServiceException(
                     ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-        }
-        if ((inscricaoDTO.getAno() < 1900) || (inscricaoDTO.getAno() > 2025)) {
-            throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
         try {
             Aluno aluno = alunoRepository.findById(inscricaoDTO.getAluno())
                     .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
-            Turma turma = turmaRepository.findByCodigoAndAnoAndSemestre(inscricaoDTO.getCodigo(), inscricaoDTO.getAno(), inscricaoDTO.getSemestre())
+            Turma turma = turmaRepository.findById((long) inscricaoDTO.getIdTurma())
                     .orElseThrow(() -> new DaoException("Turma não encontrada"));
 
             // Para alterar, primeiro buscamos a inscrição original para pegar o ID
@@ -130,7 +122,6 @@ public class InscricaoService {
                     turma
             );
 
-            // Esta é a parte crucial: setamos o ID original para o save() saber que é um UPDATE
             inscricaoAtualizada.setId(inscricaoOriginal.getId());
 
             inscricaoRepository.save(inscricaoAtualizada);

@@ -18,21 +18,15 @@ public class InscricaoDTO {
     private Situacao situacao;
 
     private int aluno;
-    private String codigo;
-    private int ano;
-    private int semestre;
+    private int idTurma;
 
-
-    public InscricaoDTO(float avaliacao1, float avaliacao2, int numFaltas, Situacao situacao, int aluno, String codigoTurma,
-                        int ano, int semestre) {
+    public InscricaoDTO(float avaliacao1, float avaliacao2, int numFaltas, Situacao situacao, int aluno, int idTurma) {
         this.avaliacao1 = avaliacao1;
         this.avaliacao2 = avaliacao2;
         this.numFaltas = numFaltas;
         this.situacao = situacao;
         this.aluno = aluno;
-        this.codigo = codigoTurma;
-        this.ano = ano;
-        this.semestre = semestre;
+        this.idTurma = idTurma;
     }
 
 }
