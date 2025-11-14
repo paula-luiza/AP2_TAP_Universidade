@@ -24,6 +24,8 @@ public class Curso {
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Aluno> alunos = new ArrayList<Aluno>();
 
+    private double valorMensalidadeBase;
+
     public Curso(int codigo, String nome) {
         this.codigo = codigo;
         this.nome = nome;

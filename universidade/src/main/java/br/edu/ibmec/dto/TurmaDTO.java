@@ -19,14 +19,14 @@ public class TurmaDTO {
     private int semestre;
     private int disciplina;
     private List<InscricaoDTO> inscricoes = new ArrayList<InscricaoDTO>();
-    private Professor professor;
+   // private Professor professor;
 
-    public TurmaDTO(String codigo, int ano, int semestre, int disciplina, Professor professor) {
+    public TurmaDTO(String codigo, int ano, int semestre, int disciplina) {
         this.codigo = codigo;
         this.ano = ano;
         this.semestre = semestre;
         this.disciplina = disciplina;
-        this.professor = professor;
+      //  this.professor = professor;
     }
 
     @Override

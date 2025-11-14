@@ -41,8 +41,8 @@ public class TurmaService {
                     turma.getCodigo(),
                     turma.getAno(),
                     turma.getSemestre(),
-                    turma.getDisciplina().getCodigo(), // Assumindo que Disciplina tem .getCodigo()
-                    turma.getProfessor()
+                    turma.getDisciplina().getCodigo()// Assumindo que Disciplina tem .getCodigo()
+                 //   turma.getProfessor()
             );
             return turmaDTO;
         } catch (Exception e) {
@@ -65,23 +65,26 @@ public class TurmaService {
         if ((turmaDTO.getAno() < 1900) || (turmaDTO.getAno() > 2025)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
+        /*
         if (turmaDTO.getProfessor() == null) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
+        */
+
 
         try {
             Disciplina disciplina = disciplinaRepository.findById(turmaDTO.getDisciplina())
                     .orElseThrow(() -> new DaoException("Disciplina com ID " + turmaDTO.getDisciplina() + " não encontrada"));
-
+/*
             Professor professor = professorRepository.findById(turmaDTO.getProfessor().getCpf())
                     .orElseThrow(() -> new DaoException("Professor com ID " + turmaDTO.getProfessor().getCpf() + " não encontrado"));
-
+*/
             Turma turma = new Turma();
             turma.setCodigo(turmaDTO.getCodigo());
             turma.setAno(turmaDTO.getAno());
             turma.setSemestre(turmaDTO.getSemestre());
             turma.setDisciplina(disciplina);
-            turma.setProfessor(professor);
+          //  turma.setProfessor(professor);
 
             turmaRepository.save(turma);
 
@@ -98,9 +101,12 @@ public class TurmaService {
         if ((turmaDTO.getAno() < 1900) || (turmaDTO.getAno() > 2025)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
+        /*
         if (turmaDTO.getProfessor() == null) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
+        */
+
 
         try {
             if (!turmaRepository.findByCodigoAndAnoAndSemestre(turmaDTO.getCodigo(), turmaDTO.getAno(), turmaDTO.getSemestre()).isPresent()) {
@@ -110,8 +116,8 @@ public class TurmaService {
             Disciplina disciplina = disciplinaRepository.findById(turmaDTO.getDisciplina())
                     .orElseThrow(() -> new DaoException("Disciplina não encontrada"));
 
-            Professor professor = professorRepository.findById(turmaDTO.getProfessor().getCpf())
-                    .orElseThrow(() -> new DaoException("Professor não encontrado"));
+            //Professor professor = professorRepository.findById(turmaDTO.getProfessor().getCpf())
+            //        .orElseThrow(() -> new DaoException("Professor não encontrado"));
 
 
             Turma turma = new Turma();
@@ -119,7 +125,7 @@ public class TurmaService {
             turma.setAno(turmaDTO.getAno());
             turma.setSemestre(turmaDTO.getSemestre());
             turma.setDisciplina(disciplina);
-            turma.setProfessor(professor);
+        //    turma.setProfessor(professor);
 
             turmaRepository.save(turma);
 

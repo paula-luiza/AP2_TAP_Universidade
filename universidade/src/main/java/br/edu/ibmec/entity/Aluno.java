@@ -35,6 +35,9 @@ public class Aluno {
     @Enumerated(EnumType.STRING)
     private EstadoCivil estadoCivil;
 
+    @Enumerated(EnumType.STRING)
+    private TipoAluno tipoAluno;
+
     @ElementCollection
     @CollectionTable(name = "aluno_telefones",
             joinColumns = @JoinColumn(name = "aluno_matricula"))
@@ -54,13 +57,14 @@ public class Aluno {
 
     public Aluno(int matricula, String nome, Data dataNascimento,
                  boolean matriculaAtiva, EstadoCivil estadoCivil, Curso curso,
-                 List<String> telefones) {
+                 List<String> telefones, TipoAluno tipoAluno) {
         this.matricula = matricula;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.matriculaAtiva = matriculaAtiva;
         this.estadoCivil = estadoCivil;
         this.curso = curso;
+        this.tipoAluno = tipoAluno;
 
         if (dataNascimento != null && dataNascimento.getAno() > 0) {
             LocalDate hoje = LocalDate.now();

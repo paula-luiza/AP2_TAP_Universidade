@@ -9,13 +9,12 @@ import java.time.format.DateTimeFormatter;
 import br.edu.ibmec.dao.AlunoRepository;
 import br.edu.ibmec.dao.CursoRepository;
 import br.edu.ibmec.dto.AlunoDTO;
-import br.edu.ibmec.entity.Aluno;
-import br.edu.ibmec.entity.Curso;
-import br.edu.ibmec.entity.Data;
-import br.edu.ibmec.entity.EstadoCivil;
+import br.edu.ibmec.entity.*;
 import br.edu.ibmec.exception.DaoException;
 import br.edu.ibmec.exception.ServiceException;
 import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
+import br.edu.ibmec.strategy.Desconto;
+import br.edu.ibmec.strategy.DescontoRegular;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +59,8 @@ public class AlunoService {
                     aluno.isMatriculaAtiva(),
                     null,
                     aluno.getCurso().getCodigo(),
-                    aluno.getTelefones());
+                    aluno.getTelefones(),
+                    aluno.getTipoAluno());
             return alunoDTO;
         } catch (Exception e) {
             throw new DaoException("Erro ao buscar aluno");
@@ -94,7 +94,8 @@ public class AlunoService {
                     alunoDTO.isMatriculaAtiva(),
                     EstadoCivil.solteiro,
                     curso,
-                    alunoDTO.getTelefones());
+                    alunoDTO.getTelefones(),
+                    alunoDTO.getTipoAluno());
 
             alunoRepository.save(aluno);
             curso.getAlunos().add(aluno);
@@ -131,7 +132,8 @@ public class AlunoService {
                     alunoDTO.isMatriculaAtiva(),
                     EstadoCivil.solteiro,
                     curso,
-                    alunoDTO.getTelefones());
+                    alunoDTO.getTelefones(),
+                    alunoDTO.getTipoAluno());
 
             alunoRepository.save(aluno);
         } catch (DaoException e) {
@@ -150,4 +152,5 @@ public class AlunoService {
             throw new DaoException("Erro ao remover aluno");
         }
     }
+
 }

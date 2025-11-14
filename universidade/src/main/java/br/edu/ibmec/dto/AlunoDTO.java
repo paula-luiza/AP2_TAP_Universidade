@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import br.edu.ibmec.entity.TipoAluno;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class AlunoDTO {
 	private boolean matriculaAtiva;
 	private EstadoCivilDTO estadoCivilDTO;
 	private List<String> telefones;
+    private TipoAluno tipoAluno;
 
 	private int curso;
 
@@ -38,13 +40,16 @@ public class AlunoDTO {
 			boolean matriculaAtiva, 
 			EstadoCivilDTO estadoCivilDTO, 
 			int curso,
-			List<String> telefones) {
+			List<String> telefones,
+            TipoAluno tipoAluno)
+        {
 		this.matricula = matricula;
 		this.nome = nome;
 		this.dtNascimento = dtNascimento;
 		this.matriculaAtiva = matriculaAtiva;
 		this.estadoCivilDTO = estadoCivilDTO;
 		this.curso = curso;
+        this.tipoAluno = tipoAluno;
 		
 		this.idade = getIdadeConvertida(dtNascimento);
 		this.telefones = telefones;
