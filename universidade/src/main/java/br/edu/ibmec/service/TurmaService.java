@@ -45,6 +45,7 @@ public class TurmaService {
             );
             return turmaDTO;
 
+
         } catch (Exception e) {
             throw new DaoException("Erro ao buscar turma: " + e.getMessage());
         }
@@ -58,7 +59,7 @@ public class TurmaService {
 
     @Transactional
     public void cadastrarTurma(TurmaDTO turmaDTO) throws ServiceException, DaoException {
-
+        // 1. Validação (usando as mesmas exceções do AlunoService para compilar)
         if (turmaDTO.getCodigo() == null || turmaDTO.getCodigo().trim().isEmpty()) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
@@ -68,6 +69,7 @@ public class TurmaService {
         if (turmaDTO.getCpfProfessor() == null) {
             throw new ServiceException(ServiceExceptionEnum.CPF_PROFESSOR_INVALIDO);
         }
+
 
         try {
             Disciplina disciplina = disciplinaRepository.findById(turmaDTO.getDisciplina())
@@ -101,6 +103,7 @@ public class TurmaService {
         if (turmaDTO.getCpfProfessor() == null) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
+
 
         try {
             if (!turmaRepository.findByCodigoAndAnoAndSemestre(turmaDTO.getCodigo(), turmaDTO.getAno(), turmaDTO.getSemestre()).isPresent()) {
