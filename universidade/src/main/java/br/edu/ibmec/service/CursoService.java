@@ -23,7 +23,7 @@ public class CursoService {
             Curso curso = cursoRepository.findById(codigo)
                     .orElseThrow(() -> new DaoException("Curso não encontrado"));
 
-            CursoDTO cursoDTO = new CursoDTO(curso.getCodigo(), curso.getNome());
+            CursoDTO cursoDTO = new CursoDTO(curso.getNome());
             return cursoDTO;
         }
         catch(DaoException e)

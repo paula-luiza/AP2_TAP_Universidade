@@ -41,15 +41,7 @@ public class InscricaoService {
             Inscricao inscricao = inscricaoRepository.findByAlunoAndTurma(aluno, turma)
                     .orElseThrow(() -> new DaoException("Inscrição não encontrada"));
 
-            // Assumindo que o DTO tem este construtor (baseado no seu código antigo)
-            InscricaoDTO inscricaoDTO = new InscricaoDTO(
-                    inscricao.getAvaliacao1(),
-                    inscricao.getAvaliacao2(),
-                    inscricao.getNumFaltas(),
-                    inscricao.getSituacao(),
-                    inscricao.getAluno().getMatricula(),
-                    inscricao.getTurma().getId()
-            );
+            InscricaoDTO inscricaoDTO = new InscricaoDTO();
             return inscricaoDTO;
         } catch (Exception e) {
             throw new DaoException("Erro ao buscar inscrição: " + e.getMessage());
@@ -70,21 +62,18 @@ public class InscricaoService {
         }
 
         try {
-            Aluno aluno = alunoRepository.findById(inscricaoDTO.getAluno())
+            Aluno aluno = alunoRepository.findById(inscricaoDTO.getIdAluno())
                     .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
             Turma turma = turmaRepository.findById((long) inscricaoDTO.getIdTurma())
                     .orElseThrow(() -> new DaoException("Turma não encontrada"));
 
-            // Cria a nova entidade Inscricao (usando o construtor da sua Entidade)
-            Inscricao inscricao = new Inscricao(
-                    inscricaoDTO.getAvaliacao1(),
-                    inscricaoDTO.getAvaliacao2(),
-                    inscricaoDTO.getNumFaltas(),
-                    inscricaoDTO.getSituacao(),
-                    aluno,
-                    turma
-            );
+            Inscricao inscricao = new Inscricao();
+            inscricao.setAluno(aluno);
+            inscricao.setTurma(turma);
+            inscricao.setAvaliacao1(0.0f);
+            inscricao.setAvaliacao2(0.0f);
+            inscricao.setNumFaltas(0);
 
             inscricaoRepository.save(inscricao);
 
@@ -103,28 +92,20 @@ public class InscricaoService {
         }
 
         try {
-            Aluno aluno = alunoRepository.findById(inscricaoDTO.getAluno())
+            Aluno aluno = alunoRepository.findById(inscricaoDTO.getIdAluno())
                     .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
             Turma turma = turmaRepository.findById((long) inscricaoDTO.getIdTurma())
                     .orElseThrow(() -> new DaoException("Turma não encontrada"));
 
-            // Para alterar, primeiro buscamos a inscrição original para pegar o ID
             Inscricao inscricaoOriginal = inscricaoRepository.findByAlunoAndTurma(aluno, turma)
                     .orElseThrow(() -> new DaoException("Inscrição não encontrada para alteração"));
 
-            Inscricao inscricaoAtualizada = new Inscricao(
-                    inscricaoDTO.getAvaliacao1(),
-                    inscricaoDTO.getAvaliacao2(),
-                    inscricaoDTO.getNumFaltas(),
-                    inscricaoDTO.getSituacao(),
-                    aluno,
-                    turma
-            );
+            inscricaoOriginal.setAvaliacao1(inscricaoDTO.getAvaliacao1());
+            inscricaoOriginal.setAvaliacao2(inscricaoDTO.getAvaliacao2());
+            inscricaoOriginal.setNumFaltas(inscricaoDTO.getNumFaltas());
 
-            inscricaoAtualizada.setId(inscricaoOriginal.getId());
-
-            inscricaoRepository.save(inscricaoAtualizada);
+            inscricaoRepository.save(inscricaoOriginal);
 
         } catch (Exception e) {
             throw new DaoException("erro do dao no service throw: " + e.getMessage());

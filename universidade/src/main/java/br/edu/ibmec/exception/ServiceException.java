@@ -45,7 +45,7 @@ public class ServiceException extends Exception {
 	public enum ServiceExceptionEnum {
 
 		CURSO_CODIGO_INVALIDO("Código de curso inválido"), CURSO_NOME_INVALIDO(
-				"Nome de curso inválido"), ALUNO_MATRICULA_INVALIDA, ALUNO_NOME_INVALIDO;
+				"Nome de curso inválido"), ALUNO_MATRICULA_INVALIDA, ALUNO_NOME_INVALIDO, CPF_PROFESSOR_INVALIDO;
 
 		private ServiceExceptionEnum() {
 			// TODO Auto-generated constructor stub

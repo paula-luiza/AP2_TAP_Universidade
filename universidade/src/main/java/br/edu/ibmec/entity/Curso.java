@@ -16,6 +16,7 @@ import java.util.List;
 public class Curso {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigo;
 
     @Column(nullable = false)

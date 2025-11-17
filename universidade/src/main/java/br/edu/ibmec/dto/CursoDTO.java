@@ -1,5 +1,6 @@
 package br.edu.ibmec.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,15 +11,17 @@ import lombok.Setter;
 @Setter
 @XmlRootElement(name="curso")
 public class CursoDTO {
-	private int codigo;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer codigo;
+
 	private String nome;
 
-    public CursoDTO(int codigo, String nome) {
-		this.codigo = codigo;
-		this.nome = nome;
-	}
+    public CursoDTO(String nome) {
+        this.nome = nome;
+    }
 
-	@Override
+    @Override
 	public String toString() {
 		return "CursoDTO [codigo=" + codigo + ", nome=" + nome + "]";
 	}

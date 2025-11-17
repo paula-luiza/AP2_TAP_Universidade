@@ -14,7 +14,7 @@ import java.util.Collection;
 
 @RestController
 
-@RequestMapping("/api/disciplinas")
+@RequestMapping("/disciplina")
 public class DisciplinaResource {
 
     @Autowired

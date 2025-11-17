@@ -2,6 +2,7 @@ package br.edu.ibmec.dto;
 
 import br.edu.ibmec.entity.Professor;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @NoArgsConstructor
 @Getter
 @Setter
@@ -18,16 +20,7 @@ public class TurmaDTO {
     private int ano;
     private int semestre;
     private int disciplina;
-    private List<InscricaoDTO> inscricoes = new ArrayList<InscricaoDTO>();
-    private Professor professor;
-
-    public TurmaDTO(String codigo, int ano, int semestre, int disciplina, Professor professor) {
-        this.codigo = codigo;
-        this.ano = ano;
-        this.semestre = semestre;
-        this.disciplina = disciplina;
-        this.professor = professor;
-    }
+    private String cpfProfessor;
 
     @Override
     public String toString() {

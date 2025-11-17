@@ -21,7 +21,6 @@ public class ProfessorDTO {
     private String nome;
     private Data dataNascimento;
     private EstadoCivil estadoCivil;
-    private List<Turma> turmas = new ArrayList<Turma>();
 
     public ProfessorDTO(String cpf, String nome, Data dataNascimento, EstadoCivil estadoCivil) {
         this.cpf = cpf;

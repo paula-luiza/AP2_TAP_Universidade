@@ -31,7 +31,6 @@ public class DisciplinaService {
                     .orElseThrow(() -> new DaoException("Disciplina não encontrada"));
 
             DisciplinaDTO disciplinaDTO = new DisciplinaDTO(
-                    disciplina.getCodigo(),
                     disciplina.getNome(),
                     disciplina.getCurso().getCodigo()
             );
@@ -50,7 +49,6 @@ public class DisciplinaService {
     public void cadastrarDisciplina(DisciplinaDTO disciplinaDTO)
             throws ServiceException, DaoException {
 
-        // Validação (mantida como no original)
         if ((disciplinaDTO.getCodigo() < 1) || (disciplinaDTO.getCodigo() > 99)) {
             throw new ServiceException(
                     ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
@@ -61,18 +59,15 @@ public class DisciplinaService {
         }
 
         try {
-            // Busca a entidade Curso primeiro
             Curso curso = cursoRepository.findById(disciplinaDTO.getCurso())
                     .orElseThrow(() -> new DaoException("Curso não encontrado para associar à disciplina"));
 
-            // Cria a nova entidade Disciplina (usando o construtor da sua Entidade)
             Disciplina disciplina = new Disciplina(
                     disciplinaDTO.getCodigo(),
                     disciplinaDTO.getNome(),
                     curso
             );
 
-            // Salva a nova disciplina
             disciplinaRepository.save(disciplina);
 
         } catch (Exception e) {
@@ -84,7 +79,6 @@ public class DisciplinaService {
     public void alterarDisciplina(DisciplinaDTO disciplinaDTO)
             throws ServiceException, DaoException {
 
-        // Validação (mantida como no original)
         if ((disciplinaDTO.getCodigo() < 1) || (disciplinaDTO.getCodigo() > 99)) {
             throw new ServiceException(
                     ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
@@ -95,23 +89,19 @@ public class DisciplinaService {
         }
 
         try {
-            // Verifica se a disciplina existe (melhoria vinda do AlunoService.removerAluno)
             if (!disciplinaRepository.existsById(disciplinaDTO.getCodigo())) {
                 throw new DaoException("Disciplina não encontrada para alteração");
             }
 
-            // Busca o Curso associado
             Curso curso = cursoRepository.findById(disciplinaDTO.getCurso())
                     .orElseThrow(() -> new DaoException("Curso não encontrado"));
 
-            // Cria o objeto para salvar (padrão "upsert" do AlunoService)
             Disciplina disciplina = new Disciplina(
                     disciplinaDTO.getCodigo(),
                     disciplinaDTO.getNome(),
                     curso
             );
 
-            // O save() vai ATUALIZAR a disciplina (porque o @Id já existe)
             disciplinaRepository.save(disciplina);
 
         } catch (Exception e) {
@@ -122,11 +112,9 @@ public class DisciplinaService {
     @Transactional
     public void removerDisciplina(int codigo) throws DaoException {
         try {
-            // Checa se existe antes de deletar
             if (!disciplinaRepository.existsById(codigo)) {
                 throw new DaoException("Disciplina não encontrada para remoção");
             }
-            // Deleta pelo ID
             disciplinaRepository.deleteById(codigo);
         } catch (Exception e) {
             throw new DaoException("Erro ao remover disciplina: " + e.getMessage());

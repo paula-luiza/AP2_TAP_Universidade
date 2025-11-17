@@ -15,7 +15,9 @@ import java.util.List;
 
 public class Disciplina {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigo;
+
     private String nome;
 
     @ManyToOne(fetch = FetchType.LAZY)

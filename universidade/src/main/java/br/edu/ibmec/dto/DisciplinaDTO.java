@@ -1,5 +1,7 @@
 package br.edu.ibmec.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,19 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @XmlRootElement(name="disciplina")
 public class DisciplinaDTO {
-    private int codigo;
+    private Integer codigo;
     private String nome;
     private int curso;
-    private List<TurmaDTO> turmas = new ArrayList<TurmaDTO>();
+    private int turma_id;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String situacao;
+    private List<Integer> turmasIds = new ArrayList<Integer>();
   //  private List<AlunoMonitor> monitores = new ArrayList<AlunoMonitor>();
 
 
-    public DisciplinaDTO(int codigo, String nome, int curso) {
-        this.codigo = codigo;
+    public DisciplinaDTO(String nome, int curso) {
         this.nome = nome;
         this.curso = curso;
     }
