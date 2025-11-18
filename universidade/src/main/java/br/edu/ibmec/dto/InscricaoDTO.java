@@ -14,7 +14,7 @@ import lombok.Setter;
 public class InscricaoDTO {
 
     private int idAluno;
-    private int idTurma;
+    private long idTurma;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private float avaliacao1;

@@ -22,6 +22,14 @@ public class TurmaDTO {
     private int disciplina;
     private String cpfProfessor;
 
+    public TurmaDTO(String codigo, int ano, int semestre, int disciplina, String cpfProfessor) {
+        this.codigo = codigo;
+        this.ano = ano;
+        this.semestre = semestre;
+        this.disciplina = disciplina;
+        this.cpfProfessor = cpfProfessor;
+    }
+
     @Override
     public String toString() {
         return "TurmaDTO [ano=" + ano + ", codigo=" + codigo + ", disciplina="

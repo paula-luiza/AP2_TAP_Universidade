@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import br.edu.ibmec.dao.AlunoRepository;
 import br.edu.ibmec.dao.CursoRepository;
@@ -13,6 +14,7 @@ import br.edu.ibmec.entity.*;
 import br.edu.ibmec.exception.DaoException;
 import br.edu.ibmec.exception.ServiceException;
 import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
+import br.edu.ibmec.factory.AlunoFactory;
 import br.edu.ibmec.strategy.Desconto;
 import br.edu.ibmec.strategy.DescontoRegular;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class AlunoService {
 
     @Autowired
     private CursoRepository cursoRepository;
+
+    @Autowired
+    private Map<String, AlunoFactory> fabricasDeAluno;
 
     public static final Data getData(String dataString) {
         try {
@@ -71,6 +76,7 @@ public class AlunoService {
         return alunoRepository.findAll();
     }
 
+
     @Transactional
     public void cadastrarAluno(AlunoDTO alunoDTO) throws ServiceException,
             DaoException {
@@ -87,18 +93,19 @@ public class AlunoService {
             Curso curso = cursoRepository.findById(alunoDTO.getCurso())
                     .orElseThrow(() -> new DaoException("Curso não encontrado"));
 
-            Aluno aluno = new Aluno(
-                    alunoDTO.getMatricula(),
-                    alunoDTO.getNome(),
-                    getData(alunoDTO.getDtNascimento().toString()),
-                    alunoDTO.isMatriculaAtiva(),
-                    EstadoCivil.solteiro,
-                    curso,
-                    alunoDTO.getTelefones(),
-                    alunoDTO.getTipoAluno());
+            TipoAluno tipo = alunoDTO.getTipoAluno();
 
-            alunoRepository.save(aluno);
-            curso.getAlunos().add(aluno);
+            AlunoFactory factory = fabricasDeAluno.get("FACTORY_" + tipo);
+
+            if (factory == null) {
+                factory = fabricasDeAluno.get("FACTORY_REGULAR");
+            }
+
+            Aluno novoAluno = factory.criarAluno(alunoDTO);
+            novoAluno.setCurso(curso);
+            alunoRepository.save(novoAluno);
+
+            curso.getAlunos().add(novoAluno);
             cursoRepository.save(curso);
         } catch (DaoException e) {
             throw new DaoException("erro do dao no service throw");

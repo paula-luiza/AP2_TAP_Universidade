@@ -11,8 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
 @Table(name = "cursos")
+@Entity
 public class Curso {
 
     @Id
@@ -25,7 +25,7 @@ public class Curso {
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Aluno> alunos = new ArrayList<Aluno>();
 
-    private double valorMensalidadeBase;
+    private double valorMateriaBase;
 
     public Curso(int codigo, String nome) {
         this.codigo = codigo;

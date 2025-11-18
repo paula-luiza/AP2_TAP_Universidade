@@ -1,7 +1,6 @@
 package br.edu.ibmec.service;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import br.edu.ibmec.dao.AlunoRepository;
 import br.edu.ibmec.dao.InscricaoRepository;
@@ -13,6 +12,7 @@ import br.edu.ibmec.entity.Turma;
 import br.edu.ibmec.exception.DaoException;
 import br.edu.ibmec.exception.ServiceException;
 import br.edu.ibmec.exception.ServiceException.ServiceExceptionEnum;
+import br.edu.ibmec.factory.InscricaoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,15 +65,11 @@ public class InscricaoService {
             Aluno aluno = alunoRepository.findById(inscricaoDTO.getIdAluno())
                     .orElseThrow(() -> new DaoException("Aluno não encontrado"));
 
-            Turma turma = turmaRepository.findById((long) inscricaoDTO.getIdTurma())
+            Turma turma = turmaRepository.findById(inscricaoDTO.getIdTurma())
                     .orElseThrow(() -> new DaoException("Turma não encontrada"));
 
-            Inscricao inscricao = new Inscricao();
-            inscricao.setAluno(aluno);
-            inscricao.setTurma(turma);
-            inscricao.setAvaliacao1(0.0f);
-            inscricao.setAvaliacao2(0.0f);
-            inscricao.setNumFaltas(0);
+            InscricaoFactory inscricaoFactory = new InscricaoFactory();
+            Inscricao inscricao = inscricaoFactory.criarInscricaoInicial(aluno, turma);
 
             inscricaoRepository.save(inscricao);
 

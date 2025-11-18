@@ -10,4 +10,5 @@ import java.util.Optional; // Adicione este import
 
 public interface InscricaoRepository extends JpaRepository<Inscricao, Integer> {
     Optional<Inscricao> findByAlunoAndTurma(Aluno aluno, Turma turma);
+    long countByAlunoMatricula(int matricula);
 }

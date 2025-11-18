@@ -39,10 +39,7 @@ public class CursoService {
     @Transactional
     public void cadastrarCurso(CursoDTO cursoDTO) throws ServiceException,
             DaoException {
-        if ((cursoDTO.getCodigo() < 1) || (cursoDTO.getCodigo() > 99)) {
-            throw new ServiceException(
-                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-        }
+
         if ((cursoDTO.getNome().length() < 1)
                 || (cursoDTO.getNome().length() > 20)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);

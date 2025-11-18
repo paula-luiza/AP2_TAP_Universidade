@@ -14,7 +14,7 @@ public class Inscricao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private float avaliacao1;
     private float avaliacao2;
