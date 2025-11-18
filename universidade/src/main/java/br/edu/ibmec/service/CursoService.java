@@ -37,23 +37,21 @@ public class CursoService {
     }
 
     @Transactional
-    public void cadastrarCurso(CursoDTO cursoDTO) throws ServiceException,
-            DaoException {
+    public void cadastrarCurso(CursoDTO cursoDTO) throws ServiceException, DaoException {
 
-        if ((cursoDTO.getNome().length() < 1)
-                || (cursoDTO.getNome().length() > 20)) {
+        // Validação do nome (Mantém igual)
+        if ((cursoDTO.getNome() == null) || (cursoDTO.getNome().length() < 1) || (cursoDTO.getNome().length() > 20)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
-        Curso curso = new Curso(cursoDTO.getCodigo(), cursoDTO.getNome());
+        Curso curso = new Curso();
+
+        curso.setNome(cursoDTO.getNome());
 
         try {
-            if (cursoRepository.existsById(curso.getCodigo())) {
-                throw new DaoException("Curso já existe");
-            }
             cursoRepository.save(curso);
-        } catch (DaoException e) {
-            throw new DaoException("erro do dao no service throw");
+        } catch (Exception e) {
+            throw new DaoException("Erro ao salvar curso: " + e.getMessage());
         }
     }
 

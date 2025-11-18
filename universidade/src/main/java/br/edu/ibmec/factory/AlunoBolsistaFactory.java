@@ -2,6 +2,7 @@ package br.edu.ibmec.factory;
 
 import br.edu.ibmec.dto.AlunoDTO;
 import br.edu.ibmec.entity.Aluno;
+import br.edu.ibmec.entity.EstadoCivil;
 import br.edu.ibmec.entity.TipoAluno;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,11 @@ public class AlunoBolsistaFactory implements AlunoFactory {
             getData(dto.getDtNascimento().toString());
             aluno.setIdade(dto.getIdade());
             aluno.setMatriculaAtiva(true);
-            getData(dto.getEstadoCivilDTO().toString());
             aluno.setTelefones(dto.getTelefones());
             aluno.setTipoAluno(TipoAluno.bolsista);
+            aluno.setEstadoCivil(
+                    br.edu.ibmec.entity.EstadoCivil.valueOf(dto.getEstadoCivilDTO().toString())
+            );
 
             return aluno;
         }

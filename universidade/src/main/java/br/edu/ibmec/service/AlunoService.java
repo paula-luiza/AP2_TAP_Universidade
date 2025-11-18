@@ -80,10 +80,10 @@ public class AlunoService {
     @Transactional
     public void cadastrarAluno(AlunoDTO alunoDTO) throws ServiceException,
             DaoException {
-        if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
-            throw new ServiceException(
-                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
+        if (alunoRepository.existsById(alunoDTO.getMatricula())) {
+            throw new ServiceException("Já existe um aluno com a matrícula " + alunoDTO.getMatricula());
         }
+
         if ((alunoDTO.getNome().length() < 1)
                 || (alunoDTO.getNome().length() > 20)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
@@ -115,12 +115,10 @@ public class AlunoService {
     @Transactional
     public void alterarAluno(AlunoDTO alunoDTO) throws ServiceException,
             DaoException {
-        if ((alunoDTO.getMatricula() < 1) || (alunoDTO.getMatricula() > 99)) {
-            throw new ServiceException(
-                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
+        if (alunoDTO.getMatricula() < 1) {
+            throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
         }
-        if ((alunoDTO.getNome().length() < 1)
-                || (alunoDTO.getNome().length() > 20)) {
+        if ((alunoDTO.getNome() == null) || (alunoDTO.getNome().length() > 100)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 

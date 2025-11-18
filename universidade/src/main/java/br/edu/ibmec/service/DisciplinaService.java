@@ -46,15 +46,9 @@ public class DisciplinaService {
     }
 
     @Transactional
-    public void cadastrarDisciplina(DisciplinaDTO disciplinaDTO)
-            throws ServiceException, DaoException {
+    public void cadastrarDisciplina(DisciplinaDTO disciplinaDTO) throws ServiceException, DaoException {
 
-        if ((disciplinaDTO.getCodigo() < 1) || (disciplinaDTO.getCodigo() > 99)) {
-            throw new ServiceException(
-                    ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
-        }
-        if ((disciplinaDTO.getNome().length() < 1)
-                || (disciplinaDTO.getNome().length() > 20)) {
+        if ((disciplinaDTO.getNome() == null) || (disciplinaDTO.getNome().length() < 1) || (disciplinaDTO.getNome().length() > 50)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
@@ -62,16 +56,16 @@ public class DisciplinaService {
             Curso curso = cursoRepository.findById(disciplinaDTO.getCurso())
                     .orElseThrow(() -> new DaoException("Curso não encontrado para associar à disciplina"));
 
-            Disciplina disciplina = new Disciplina(
-                    disciplinaDTO.getCodigo(),
-                    disciplinaDTO.getNome(),
-                    curso
-            );
+            Disciplina disciplina = new Disciplina();
+            disciplina.setNome(disciplinaDTO.getNome());
+            disciplina.setCurso(curso);
 
             disciplinaRepository.save(disciplina);
 
+            disciplinaDTO.setCodigo(disciplina.getCodigo());
+
         } catch (Exception e) {
-            throw new DaoException("erro do dao no service throw: " + e.getMessage());
+            throw new DaoException("Erro ao cadastrar disciplina: " + e.getMessage());
         }
     }
 

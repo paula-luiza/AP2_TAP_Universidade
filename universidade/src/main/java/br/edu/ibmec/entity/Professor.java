@@ -29,7 +29,7 @@ public class Professor {
     @Enumerated(EnumType.STRING)
     private EstadoCivil estadoCivil;
 
-    @OneToMany
+    @OneToMany(mappedBy = "professor")
     private List<Turma> turmas = new ArrayList<Turma>();
 
     public Professor(String cpf, String nome, Data dataNascimento, EstadoCivil estadoCivil) {

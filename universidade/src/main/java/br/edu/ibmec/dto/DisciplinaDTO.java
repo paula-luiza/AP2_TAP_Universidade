@@ -17,16 +17,19 @@ import java.util.List;
 @Setter
 @XmlRootElement(name="disciplina")
 public class DisciplinaDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer codigo;
+
     private String nome;
     private int curso;
     private int turma_id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String situacao;
-    private List<Integer> turmasIds = new ArrayList<Integer>();
-  //  private List<AlunoMonitor> monitores = new ArrayList<AlunoMonitor>();
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<Integer> turmasIds = new ArrayList<Integer>();
 
     public DisciplinaDTO(String nome, int curso) {
         this.nome = nome;
