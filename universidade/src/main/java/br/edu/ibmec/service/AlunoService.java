@@ -89,11 +89,15 @@ public class AlunoService {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
+        if (alunoDTO.getMatricula() < 1) {
+            throw new ServiceException(ServiceExceptionEnum.CURSO_CODIGO_INVALIDO);
+        }
+
         try {
             Curso curso = cursoRepository.findById(alunoDTO.getCurso())
                     .orElseThrow(() -> new DaoException("Curso não encontrado"));
 
-            TipoAluno tipo = alunoDTO.getTipoAluno();
+            String tipo = alunoDTO.getTipoAluno() != null ? alunoDTO.getTipoAluno().toString().toUpperCase() : "REGULAR";
 
             AlunoFactory factory = fabricasDeAluno.get("FACTORY_" + tipo);
 

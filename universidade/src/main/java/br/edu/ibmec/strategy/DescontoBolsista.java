@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class DescontoBolsista implements Desconto {
     @Override
     public double aplicar(double valor) {
-        return valor * 0.3;
+        return valor * 0.7;
     }
 }

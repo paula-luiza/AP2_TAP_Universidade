@@ -38,7 +38,7 @@ public class MensalidadeService {
         Double valorBruto = valorMateria * qtdMaterias;
 
 
-        String tipoAluno = aluno.getTipoAluno().toString();
+        String tipoAluno = aluno.getTipoAluno().toString().toUpperCase();
 
         Desconto strategy = calculoStrategies.get(tipoAluno);
         if (strategy == null) {

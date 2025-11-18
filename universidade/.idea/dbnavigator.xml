@@ -47,6 +47,7 @@
     <connection id="34549ec4-05b7-4374-a99c-da13b3bee770" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="34549ec4-05b7-4374-a99c-da13b3bee770" dataset="escola.alunos" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="34549ec4-05b7-4374-a99c-da13b3bee770" dataset="escola.inscricao" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="4e11bdf3-ea19-41c3-98c8-603af91161cb" dataset="escola.disciplina_turmas" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="4e11bdf3-ea19-41c3-98c8-603af91161cb" dataset="escola.alunos" active-filter-id="EMPTY_FILTER">

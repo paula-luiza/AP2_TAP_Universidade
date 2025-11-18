@@ -17,8 +17,7 @@ public class AlunoBolsistaFactory implements AlunoFactory {
 
             aluno.setNome(dto.getNome());
             aluno.setMatricula(dto.getMatricula());
-            getData(dto.getDtNascimento().toString());
-            aluno.setIdade(dto.getIdade());
+            aluno.setDataNascimento(getData(dto.getDtNascimento().toString()));            aluno.setIdade(dto.getIdade());
             aluno.setMatriculaAtiva(true);
             aluno.setTelefones(dto.getTelefones());
             aluno.setTipoAluno(TipoAluno.bolsista);

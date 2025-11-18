@@ -17,6 +17,8 @@ public class CursoDTO {
 
 	private String nome;
 
+    private Double valorMateriaBase;
+
     public CursoDTO(String nome) {
         this.nome = nome;
     }

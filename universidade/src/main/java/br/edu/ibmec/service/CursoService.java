@@ -39,17 +39,18 @@ public class CursoService {
     @Transactional
     public void cadastrarCurso(CursoDTO cursoDTO) throws ServiceException, DaoException {
 
-        // Validação do nome (Mantém igual)
         if ((cursoDTO.getNome() == null) || (cursoDTO.getNome().length() < 1) || (cursoDTO.getNome().length() > 20)) {
             throw new ServiceException(ServiceExceptionEnum.CURSO_NOME_INVALIDO);
         }
 
         Curso curso = new Curso();
-
         curso.setNome(cursoDTO.getNome());
+
+        curso.setValorMateriaBase(cursoDTO.getValorMateriaBase() != null ? cursoDTO.getValorMateriaBase() : 0.0);
 
         try {
             cursoRepository.save(curso);
+            cursoDTO.setCodigo(curso.getCodigo());
         } catch (Exception e) {
             throw new DaoException("Erro ao salvar curso: " + e.getMessage());
         }
@@ -68,6 +69,11 @@ public class CursoService {
         }
 
         Curso curso = new Curso(cursoDTO.getCodigo(), cursoDTO.getNome());
+        curso.setNome(cursoDTO.getNome());
+
+        if (cursoDTO.getValorMateriaBase() != null) {
+            curso.setValorMateriaBase(cursoDTO.getValorMateriaBase());
+        }
 
         try {
             if (!cursoRepository.existsById(curso.getCodigo())) {
